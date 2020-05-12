@@ -1,18 +1,18 @@
 import React, { useState } from 'react'
 import {
     CssBaseline, makeStyles, createStyles, Theme, IconButton,
-    Divider, ListItem, ListItemIcon, ListItemText, Collapse,
-    List, Button,
+    Divider, ListItem, ListItemIcon, ListItemText,
 } from '@material-ui/core'
 import {
-    InboxOutlined, ExpandMoreOutlined, ChevronRightOutlined,
-    ExpandLess, ExpandMore, VideoLibrary, WorkOutline, AccountBox,
-    Help,
+    InboxOutlined, ExpandLess, ExpandMore, VideoLibrary,
+    AccountBox, Help, CloudDownload,
 } from '@material-ui/icons'
-import Link from 'next/link'
-import { TreeView, TreeItem } from '@material-ui/lab'
 
 import { selectFolder, scanFolder, IFileType } from '../../util/file'
+import Folder from './folder'
+import Video from './video'
+import Audio from './audio'
+import Download from './download'
 
 interface IProps { }
 const useStyles = makeStyles((theme: Theme) =>
@@ -26,20 +26,6 @@ const useStyles = makeStyles((theme: Theme) =>
             height: '100vh',
             backgroundColor: 'rgba(0,0,0,1)'
         },
-        empty: {
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center'
-        },
-        filetree: {
-            display: 'flex',
-            flexDirection: 'column',
-            alignContent: 'center',
-            justifyContent: 'center',
-            flexGrow: 1,
-            minHeight: 240,
-            padding: 8
-        },
         darwer: {
             display: 'flex',
             flexDirection: 'column',
@@ -52,31 +38,14 @@ const useStyles = makeStyles((theme: Theme) =>
         }
     })
 )
-const renderIcon = (ext: string) => {
-    switch (ext) {
-        default:
-            return
-    }
-}
-const renderFileItem = (v: IFileType) => {
-    if (v.elements && v.elements.length > 0) {
-        return (
-            <TreeItem label={v.base} nodeId={v.filePathFull} key={v.filePathFull}>
-                {v.elements.map(i => renderFileItem(i))}
-            </TreeItem>
-        )
-    }
-
-    return (
-        <TreeItem label={v.base} nodeId={v.filePathFull} key={v.filePathFull} />
-    )
-}
 const Page: React.FC<IProps> = props => {
     const classes = useStyles()
     const [visible, setVisible] = useState(true)
-    const [collapse1, setCollapse1] = useState(true)
+    const [collapse3, setCollapse3] = useState(false)
+    const [collapse4, setCollapse4] = useState(false)
+    const [collapse5, setCollapse5] = useState(false)
     const [files, setFiles] = useState<IFileType[]>([])
-    const onClickM1 = async () => {
+    const onOpenFolder = async () => {
         try {
             const filePath = await selectFolder()
             const files = await scanFolder(filePath)
@@ -88,8 +57,9 @@ const Page: React.FC<IProps> = props => {
     return (
         <div className={classes.root}>
             <CssBaseline />
+            {/* menu */}
             <div className={classes.menu}>
-                <IconButton style={{ color: '#fff' }} onClick={onClickM1}>
+                <IconButton style={{ color: '#fff' }}>
                     <VideoLibrary />
                 </IconButton>
                 <Divider />
@@ -103,63 +73,16 @@ const Page: React.FC<IProps> = props => {
                     <Help />
                 </IconButton>
             </div>
+            {/* appbar */}
             {visible ?
                 <div className={classes.darwer} >
-                    <ListItem button key='1' onClick={() => setCollapse1(!collapse1)}>
-                        <ListItemIcon>
-                            <WorkOutline />
-                        </ListItemIcon>
-                        <ListItemText primary='workspace' />
-                        {collapse1 ? <ExpandLess /> : <ExpandMore />}
-                    </ListItem>
-                    <Collapse
-                        unmountOnExit
-                        in={collapse1}
-                        className={classes.filetree}
-                        style={files.length > 0 ? { justifyContent: 'flex-start' } : {}}
-                    >
-                        {files.length > 0
-                            ?
-                            <List component='div' disablePadding >
-                                <TreeView
-                                    defaultCollapseIcon={<ExpandMoreOutlined />}
-                                    defaultExpandIcon={<ChevronRightOutlined />}
-                                >
-                                    {files.map(i => renderFileItem(i))}
-                                </TreeView>
-                            </List>
-                            :
-                            <div className={classes.empty}>
-                                <Button onClick={onClickM1}>未选择文件夹</Button>
-                            </div>}
-                    </Collapse>
+                    <Folder files={files} onClickEmpty={onOpenFolder} />
                     <Divider />
-                    <ListItem button key='2'>
-                        <ListItemIcon>
-                            <InboxOutlined />
-                        </ListItemIcon>
-                        <ListItemText primary='视频编辑' />
-                    </ListItem>
-                    <ListItem button key='3'>
-                        <ListItemIcon>
-                            <InboxOutlined />
-                        </ListItemIcon>
-                        <ListItemText primary='字幕编辑' />
-                    </ListItem>
-                    <ListItem button key='4'>
-                        <ListItemIcon>
-                            <InboxOutlined />
-                        </ListItemIcon>
-                        <ListItemText primary='配音录音' />
-                    </ListItem>
-                    <Link href='/editor/download'>
-                        <ListItem button key='5'>
-                            <ListItemIcon>
-                                <InboxOutlined />
-                            </ListItemIcon>
-                            <ListItemText primary='视频下载' />
-                        </ListItem>
-                    </Link>
+                    <Video files={files} />
+                    <Divider />
+                    <Audio files={files} />
+                    <Divider />
+                    <Download files={files} />
                 </div>
                 : null}
             <div className={classes.content}>
