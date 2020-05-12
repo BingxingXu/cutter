@@ -26,7 +26,8 @@ if (isProd) {
     minWidth: 800,
     minHeight: 600,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      webSecurity: false
     }
   });
 

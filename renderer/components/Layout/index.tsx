@@ -1,11 +1,9 @@
 import React, { useState } from 'react'
 import {
-    CssBaseline, makeStyles, createStyles, Theme, IconButton,
-    Divider, ListItem, ListItemIcon, ListItemText,
+    CssBaseline, makeStyles, createStyles, Theme, IconButton, Divider,
 } from '@material-ui/core'
 import {
-    InboxOutlined, ExpandLess, ExpandMore, VideoLibrary,
-    AccountBox, Help, CloudDownload,
+    InboxOutlined, VideoLibrary, AccountBox, Help,
 } from '@material-ui/icons'
 
 import { selectFolder, scanFolder, IFileType } from '../../util/file'
@@ -41,15 +39,13 @@ const useStyles = makeStyles((theme: Theme) =>
 const Page: React.FC<IProps> = props => {
     const classes = useStyles()
     const [visible, setVisible] = useState(true)
-    const [collapse3, setCollapse3] = useState(false)
-    const [collapse4, setCollapse4] = useState(false)
-    const [collapse5, setCollapse5] = useState(false)
     const [files, setFiles] = useState<IFileType[]>([])
     const onOpenFolder = async () => {
         try {
             const filePath = await selectFolder()
             const files = await scanFolder(filePath)
             setFiles(files)
+            console.log('files', files)
         } catch (err) {
             console.log('error', err)
         }
