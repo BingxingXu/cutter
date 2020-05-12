@@ -3,8 +3,11 @@ import {
     CssBaseline, makeStyles, createStyles, Theme, IconButton,
     Drawer, Divider, List, ListItem, ListItemIcon, ListItemText
 } from '@material-ui/core'
-import { InboxOutlined, MailOutlineOutlined } from '@material-ui/icons'
+import { InboxOutlined, ExpandMoreOutlined, ChevronRightOutlined } from '@material-ui/icons'
 import Link from 'next/link'
+import { TreeView, TreeItem } from '@material-ui/lab'
+
+import { selectFolder, scanFolder, IFileType } from '../../util/file'
 
 interface IProps { }
 
@@ -19,6 +22,11 @@ const useStyles = makeStyles((theme: Theme) =>
             height: '100vh',
             backgroundColor: 'rgba(0,0,0,1)'
         },
+        filetree: {
+            flexGrow: 1,
+            height: 240,
+            padding: 24,
+        },
         darwer: {
             display: 'flex',
             flexDirection: 'column',
@@ -31,23 +39,56 @@ const useStyles = makeStyles((theme: Theme) =>
         }
     })
 )
+const renderFileItem = (v: IFileType) => {
+    if (v.elements && v.elements.length > 0) {
+        return (
+            <TreeItem label={v.base} nodeId={v.filePathFull} key={v.filePathFull}>
+                {v.elements.map(i => renderFileItem(i))}
+            </TreeItem>
+        )
+    }
+
+    return (
+        <TreeItem label={v.base} nodeId={v.filePathFull} key={v.filePathFull} />
+    )
+}
 const Page: React.FC<IProps> = props => {
     const classes = useStyles()
     const [visible, setVisible] = useState(true)
+    const [files, setFiles] = useState<IFileType[]>([])
+    const onClickM1 = async () => {
+        try {
+            const filePath = await selectFolder()
+            const files = await scanFolder(filePath)
+            setFiles(files)
+        } catch (err) {
+            console.log('error', err)
+        }
+    }
     return (
         <div className={classes.root}>
             <CssBaseline />
             <div className={classes.menu}>
-                <IconButton style={{ color: '#fff' }}>
+                <IconButton style={{ color: '#fff' }} onClick={onClickM1}>
                     <InboxOutlined />
                 </IconButton>
                 <Divider />
-                <IconButton style={{ color: '#fff' }}>
+                <IconButton style={{ color: '#fff' }} onClick={() => setVisible(!visible)}>
                     <InboxOutlined />
                 </IconButton>
             </div>
             {visible ?
                 <div className={classes.darwer} >
+                    {files.length > 0 ?
+                        <TreeView
+                            className={classes.filetree}
+                            defaultCollapseIcon={<ExpandMoreOutlined />}
+                            defaultExpandIcon={<ChevronRightOutlined />}
+                        >
+                            {files.map(i => renderFileItem(i))}
+                        </TreeView>
+                        :
+                        '未选择文件夹'}
                     <ListItem button key='1'>
                         <ListItemIcon>
                             <InboxOutlined />
