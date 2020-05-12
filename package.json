@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.53",
     "electron-serve": "^0.4.1",
     "electron-store": "^5.1.1",
     "install": "^0.13.0",
