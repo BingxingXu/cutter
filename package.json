@@ -14,9 +14,11 @@
     "@material-ui/icons": "^4.9.1",
     "electron-serve": "^0.4.1",
     "electron-store": "^5.1.1",
+    "install": "^0.13.0",
     "material-ui-dropzone": "^3.0.0",
     "module-alias": "^2.2.2",
-    "react-responsive-carousel": "^3.2.7"
+    "react-responsive-carousel": "^3.2.7",
+    "youtube-dl": "^3.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
