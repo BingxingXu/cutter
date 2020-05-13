@@ -17,6 +17,7 @@
     "electron-store": "^5.1.1",
     "fluent-ffmpeg": "git+https://github.com/fluent-ffmpeg/node-fluent-ffmpeg.git",
     "install": "^0.13.0",
+    "lodash": "^4.17.15",
     "material-ui-dropzone": "^3.0.0",
     "module-alias": "^2.2.2",
     "react-player": "^2.0.1",

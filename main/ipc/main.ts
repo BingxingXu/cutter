@@ -2,6 +2,7 @@ import { ipcMain, BrowserWindow, dialog, shell } from 'electron';
 import { promisify } from 'util';
 import fs from 'fs';
 import Store from 'electron-store';
+import _ from 'lodash';
 
 import scan from '../helpers/folder';
 import ffmpeg from '../helpers/ffmpeg';
@@ -27,6 +28,12 @@ ipcMain.on('IPC_FOLDER_SCAN', async (event, arg) => {
             ...arg,
             needCheckIsFolder: true
         }))
+        fs.watch(arg.folderPath, async (eventType, file) => {
+            event.reply('IPC_FOLDER_SCAN_REPLY', await scan({
+                ...arg,
+                needCheckIsFolder: true
+            }))
+        })
     } catch (err) {
         console.log("IPC error", err)
     }

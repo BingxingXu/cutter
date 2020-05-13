@@ -43,9 +43,9 @@ const Page: React.FC<IProps> = props => {
     const onOpenFolder = async () => {
         try {
             const filePath = await selectFolder()
-            const files = await scanFolder(filePath)
-            setFiles(files)
-            console.log('files', files)
+            scanFolder(filePath, (v) => {
+                setFiles(v)
+            })
         } catch (err) {
             console.log('error', err)
         }

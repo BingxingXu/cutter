@@ -54,10 +54,10 @@ export const selectFolder = (args?: any): Promise<string> => {
         )
     })
 }
-export const scanFolder = (arg: string | IFolderScanArgs): Promise<IFileType[]> => {
+export const scanFolder = (arg: string | IFolderScanArgs, cb?: (v: IFileType[]) => void) => {
     let defaultArg = {
         folderPath: '/',
-        ignorePath: ['node_modules', 'dist', '.git'].map(e => path.sep + e),
+        ignorePath: ['.DS_Store', 'node_modules', 'dist', '.git'].map(e => path.sep + e),
         ignoreExt: [],
         ignoreFile: false,
         ignoreDotStartFile: false,
@@ -72,12 +72,10 @@ export const scanFolder = (arg: string | IFolderScanArgs): Promise<IFileType[]> 
     }
 
     ipcRenderer.send('IPC_FOLDER_SCAN', defaultArg)
-    return new Promise((res, rej) => {
-        ipcRenderer.on(
-            'IPC_FOLDER_SCAN_REPLY',
-            (event, arg) => {
-                res(arg)
-            }
-        )
-    })
+    ipcRenderer.on(
+        'IPC_FOLDER_SCAN_REPLY',
+        (event, arg) => {
+            cb && cb(arg)
+        }
+    )
 }
