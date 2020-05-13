@@ -74,7 +74,14 @@ ipcMain.on('IPC_EXTRACT_AUDIO', (event, { file, path }) => {
 })
 
 /**
- * 
+ * 音频转文字
+ */
+ipcMain.on('IPC_SPEECH_TO_TEXT', (event, path) => {
+    ffmpeg.audio2Text(path)
+})
+
+/**
+ * store
  */
 const store = new Store()
 ipcMain.on('IPC_GET_ITEM', (event, arg) => {

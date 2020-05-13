@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@material-ui/core';
 
-import { extractAudio } from '../../../util/video';
+import { extractAudio, speach2Text } from '../../../util/video';
 interface IProps { }
 
 const Page: React.FC<IProps> = (props) => {
@@ -9,9 +9,15 @@ const Page: React.FC<IProps> = (props) => {
         extractAudio('/Users/xubingxing/Desktop/minx/cut/a.mp4',
             '/Users/xubingxing/Desktop/minx/cut')
     }
+    const onSTT = () => {
+        speach2Text('/Users/xubingxing/Desktop/minx/cut/output.pcm')
+    }
 
     return (
-        <Button onClick={onExtractAudio}>Download</Button>
+        <>
+            <Button onClick={onExtractAudio}>Video to Audio</Button>
+            <Button onClick={onSTT}>Speach To Text</Button>
+        </>
     )
 }
 

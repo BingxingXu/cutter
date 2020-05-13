@@ -7,3 +7,7 @@ export const extractAudio = (file: string, path: string) => {
         console.log('args', args)
     })
 }
+
+export const speach2Text = (file: string) => {
+    ipcRenderer.send('IPC_SPEECH_TO_TEXT', file)
+}
