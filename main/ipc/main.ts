@@ -4,6 +4,7 @@ import fs from 'fs';
 import Store from 'electron-store';
 
 import scan from '../helpers/folder';
+import ffmpeg from '../helpers/ffmpeg';
 
 // 选择文件夹
 ipcMain.on('IPC_FOLDER_SELECT', async (event, arg) => {
@@ -57,6 +58,13 @@ ipcMain.on('IPC_EXPORT', async (event, {
  * 发送桌面通知
  */
 ipcMain.on('IPC_SEND_NOTIFICATION', async () => { })
+
+/**
+ * 视频中截取音频
+ */
+ipcMain.on('IPC_EXTRACT_AUDIO', (event, { file, path }) => {
+    ffmpeg.extractAudio(file, path, event)
+})
 
 /**
  * 

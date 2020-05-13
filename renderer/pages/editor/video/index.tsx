@@ -53,6 +53,7 @@ const Page: React.FC<IProps> = (props) => {
             <Player
                 ref={player}
                 playing={playing}
+                controls
                 progressInterval={500}
                 onProgress={onProgress}
                 onDuration={onDuration}
@@ -62,7 +63,7 @@ const Page: React.FC<IProps> = (props) => {
             <div>played: {progress.toFixed(1)} sec</div>
             <LinearProgress value={(progress / duration) * 100} variant='determinate' />
             {slices.map((i, index) => (
-                <div className={classes.slice}>
+                <div className={classes.slice} key={index}>
                     <Slider
                         key={index}
                         value={i}
